@@ -200,7 +200,7 @@ function obj.togglePlayPause()
 
     local function isPlayPauseButton(el)
         return el:attributeValue("AXRole") == "AXButton" and
-               el:attributeValue("AXTitle") == "Play/Pause"
+            el:attributeValue("AXTitle") == "Play/Pause"
     end
     local button = findRekordboxElement(win, isPlayPauseButton)
     if not button then
@@ -217,7 +217,8 @@ function obj.prevTrack()
 
     local function isPrevTrackButton(el)
         return el:attributeValue("AXRole") == "AXButton" and
-               el:attributeValue("AXHelp") == "Track Search (Backward):\nPlayback returns to the beginning of the track currently playing.\nWhen pressed twice in a row, playback returns to the beginning of the previous track."
+            el:attributeValue("AXHelp") ==
+            "Track Search (Backward):\nPlayback returns to the beginning of the track currently playing.\nWhen pressed twice in a row, playback returns to the beginning of the previous track."
     end
 
     local button = findRekordboxElement(win, isPrevTrackButton)
@@ -235,7 +236,7 @@ function obj.nextTrack()
 
     local function isNextTrackButton(el)
         return el:attributeValue("AXRole") == "AXButton" and
-               el:attributeValue("AXHelp") == "Track Search (Forward):\nMove to the beginning of the next track."
+            el:attributeValue("AXHelp") == "Track Search (Forward):\nMove to the beginning of the next track."
     end
 
     local button = findRekordboxElement(win, isNextTrackButton)
@@ -253,7 +254,7 @@ function obj.jumpForward()
 
     local function isJumpForwardButton(el)
         return el:attributeValue("AXRole") == "AXButton" and
-               el:attributeValue("AXHelp") == "Jump Forward"
+            el:attributeValue("AXHelp") == "Jump Forward"
     end
 
     local button = findRekordboxElement(win, isJumpForwardButton)
@@ -270,7 +271,7 @@ function obj.jumpBackward()
 
     local function isPrevTrackButton(el)
         return el:attributeValue("AXRole") == "AXButton" and
-               el:attributeValue("AXHelp") == "Jump Reverse"
+            el:attributeValue("AXHelp") == "Jump Reverse"
     end
 
     local button = findRekordboxElement(win, isPrevTrackButton)
@@ -304,9 +305,9 @@ end
 
 function obj.getMasterVolume()
     local slider = findMasterVolumeSlider()
-    if not slider then 
+    if not slider then
         obj.logger.d("Master Volume slider not found, returning 0")
-        return 0 
+        return 0
     end
     local value = slider:attributeValue("AXValue")
     if not value then
@@ -319,22 +320,22 @@ end
 
 function obj.setVolume(volumeLevel)
     local slider = findMasterVolumeSlider()
-    if not slider then 
+    if not slider then
         obj.logger.d("Master Volume slider not found, cannot set volume")
-        return 
+        return
     end
     local currentVolume = slider:attributeValue("AXValue")
     if not currentVolume then
         obj.logger.d("No current volume value found, cannot set volume")
         return
     end
-    
+
     local delta = volumeLevel - currentVolume
     local absSteps = math.min(math.abs(delta), VOLUME_STEP_SIZE)
     local action = delta > 0 and "AXIncrement" or "AXDecrement"
-    
+
     obj.logger.d("Setting volume from " .. currentVolume .. "% to " .. volumeLevel .. "%")
-    
+
     for i = 1, absSteps do
         hs.timer.doAfter((i - 1) * VOLUME_STEP_DELAY, function()
             slider:performAction(action)

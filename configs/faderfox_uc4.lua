@@ -6,8 +6,8 @@ obj.name = "Faderfox UC4"
 obj.id = "ff_uc4"
 obj.channel = 2
 obj.ccMap = {
-    ["SYSTEM_MUTE"] = 13,
-    ["SYSTEM_VOLUME"] = 31,
+    SYSTEM_MUTE = 13,
+    SYSTEM_VOLUME = 31,
 }
 
 obj.logger = hs.logger.new(obj.id)

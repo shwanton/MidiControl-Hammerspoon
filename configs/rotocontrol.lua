@@ -172,7 +172,6 @@ function obj:transmitRekordboxVolume(message)
     obj.logger.d("Sent initial volume to " .. currentVolume .. "%")
 end
 
-
 function obj:transmitRekordboxLaunch(message)
     local txMessage = {
         channel = message.channel,
