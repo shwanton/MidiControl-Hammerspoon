@@ -7,6 +7,7 @@ local obj = {}
 local VOLUME_STEP_SIZE = 10   -- Maximum steps for volume adjustment
 local VOLUME_STEP_DELAY = 0.1 -- 100ms between steps
 local REKORDBOX_BUNDLE_ID = "com.pioneerdj.rekordboxdj"
+local REKORDBOX_APP_RUNNING_NAME = "rekordbox"
 
 -- Logger setup
 obj.logger = hs.logger.new('rekordbox')
@@ -51,24 +52,25 @@ local function findElement(el, matcher)
     return nil
 end
 
--- Application state management
 local function isAppRunning(bundleID)
     local app = hs.application.get(bundleID)
     return app and app:isRunning()
 end
 
-local function isAppHidden(bundleID)
-    local app = hs.application.get(bundleID)
-    return app and app:isHidden()
+local function isAppFocused(appName)
+    local frontApp = hs.application.frontmostApplication()
+    
+    if frontApp then
+        -- Check if the frontmost app matches the app we're looking for
+        return frontApp:name() == appName
+    else
+        debugAlert("current focused app: " .. frontApp:name())
+        return false
+    end
 end
 
 local function launchOrFocus(bundleID)
-    if isAppRunning(bundleID) then
-        hs.application.launchOrFocusByBundleID(bundleID)
-    else
-        debugAlert("Launching " .. bundleID)
-        hs.application.launchOrFocusByBundleID(bundleID)
-    end
+    hs.application.launchOrFocusByBundleID(bundleID)
 end
 
 local function hideApp(bundleID)
@@ -170,48 +172,57 @@ local function validExportWindow()
     if not win then return nil end
 
     local linkButton = findElement(win, isAbletonLinkButton)
-    debugAlert("Only supported in Export mode")
-    if linkButton then return nil end
+    if linkButton then 
+        debugAlert("Feature only supported in Export mode")
+        return nil 
+    end
 
     return win
 end
 
--- Public API
-function obj.launchApp()
+-- Rekordbox API
+function obj.launchRekordbox()
     launchOrFocus(REKORDBOX_BUNDLE_ID)
 end
 
-function obj.hideApp()
+function obj.hideRekordbox()
     hideApp(REKORDBOX_BUNDLE_ID)
 end
 
-function obj.isAppRunning()
+function obj.isRekordboxRunning()
     return isAppRunning(REKORDBOX_BUNDLE_ID)
 end
 
-function obj.isAppVisible()
-    return not isAppHidden(REKORDBOX_BUNDLE_ID)
+function obj.rekordboxApp()
+    return hs.application.get(REKORDBOX_BUNDLE_ID)
 end
 
--- Playback controls
-function obj.togglePlayPause()
-    local win = validExportWindow()
-    if not win then return end
+function obj.isRekordboxFocused()
+    return isAppFocused(REKORDBOX_APP_RUNNING_NAME)
+end
 
-    local function isPlayPauseButton(el)
-        return el:attributeValue("AXRole") == "AXButton" and
-            el:attributeValue("AXTitle") == "Play/Pause"
+local function sendKeyToApp(modifiers, key)
+    local app = obj.rekordboxApp()
+    if app then
+        -- Send keyboard shortcut to the app without changing focus
+        hs.eventtap.keyStroke(modifiers, key, 0, app)
+        return true
+    else
+        print("Application not found or not running")
+        return false
     end
-    local button = findRekordboxElement(win, isPlayPauseButton)
-    if not button then
-        debugAlert("Play/Pause button not found")
-        return
-    end
-    button:performAction("AXPress")
-    debugAlert("Play/Pause toggled")
+end
+
+function obj.togglePlay()
+    sendKeyToApp({}, "space")
 end
 
 function obj.prevTrack()
+    if obj.isRekordboxFocused() then
+        sendKeyToApp({"cmd"}, "up")
+        return;
+    end
+
     local win = validExportWindow()
     if not win then return end
 
@@ -231,6 +242,11 @@ function obj.prevTrack()
 end
 
 function obj.nextTrack()
+    if obj.isRekordboxFocused() then
+        sendKeyToApp({"cmd"}, "down")
+        return;
+    end
+
     local win = validExportWindow()
     if not win then return end
 
@@ -249,6 +265,11 @@ function obj.nextTrack()
 end
 
 function obj.jumpForward()
+    if obj.isRekordboxFocused() then
+        sendKeyToApp({}, "right")
+        return;
+    end
+
     local win = validExportWindow()
     if not win then return end
 
@@ -266,6 +287,11 @@ function obj.jumpForward()
 end
 
 function obj.jumpBackward()
+    if obj.isRekordboxFocused() then
+        sendKeyToApp({}, "left")
+        return;
+    end
+
     local win = validExportWindow()
     if not win then return end
 

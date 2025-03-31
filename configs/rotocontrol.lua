@@ -47,8 +47,8 @@ function obj:receiveSystemMute(message)
 end
 
 function obj:receiveRekordboxPlay(message)
-    if message.ccValue == 127 or message.ccValue == 0 then
-        rekordbox.togglePlayPause()
+    if message.ccValue == 127 then
+        rekordbox.togglePlay()
     end
 end
 
@@ -94,30 +94,28 @@ function obj:receiveRekordboxJumpBack(message)
 end
 
 function obj:receiveRekordboxVolume(message)
-    if self._volumeDebounceTimer then
-        self._volumeDebounceTimer:stop()
+    if not self._volumeHandler then
+        self._volumeHandler = self.utils.debounce(function(ccValue)
+            rekordbox.setVolume(self.utils.midiToPercentage(ccValue))
+            local actualVolume = rekordbox.getMasterVolume()
+            if actualVolume then
+                local sendMessage = {
+                    channel = message.channel,
+                    ccNumber = obj.ccMap.REKORDBOX_VOLUME,
+                    ccValue = self.utils.percentageToMidi(actualVolume)
+                }
+                self:sendControlChange(sendMessage)
+            end
+        end, 0.1)
     end
-    self._pendingRekordboxVolume = message.ccValue
-    self._volumeDebounceTimer = hs.timer.doAfter(0.1, function()
-        rekordbox.setVolume(self.utils.midiToPercentage(self._pendingRekordboxVolume))
-        local actualVolume = rekordbox.getMasterVolume()
-        if actualVolume then
-            local sendMessage = {
-                channel = message.channel,
-                ccNumber = obj.ccMap.REKORDBOX_VOLUME,
-                ccValue = self.utils.percentageToMidi(actualVolume)
-            }
-            self:sendControlChange(sendMessage)
-        end
-        self._volumeDebounceTimer = nil
-    end)
+    self._volumeHandler(message.ccValue)
 end
 
 function obj:receiveRekordboxLaunch(message)
     if message.ccValue == 127 then
-        rekordbox.launchApp()
+        rekordbox.launchRekordbox()
     elseif message.ccValue == 0 then
-        rekordbox.hideApp()
+        rekordbox.hideRekordbox()
     end
 end
 
@@ -176,7 +174,7 @@ function obj:transmitRekordboxLaunch(message)
     local txMessage = {
         channel = message.channel,
         ccNumber = message.ccNumber,
-        ccValue = rekordbox.isAppVisible() and 127 or 0
+        ccValue = rekordbox.isRekordboxFocused() and 127 or 0
     }
     self:sendControlChange(txMessage)
     obj.logger.d("Sent initial launch value", hs.inspect(txMessage))
