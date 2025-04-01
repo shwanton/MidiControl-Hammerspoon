@@ -10,11 +10,11 @@ You can install Hammerspoon in two ways:
 
 2. Install with Homebrew:
 
-```bash
+```sh
 brew install --cask hammerspoon
 ```
 
-## Spoon Setup Options
+## Spoon Setup 
 
 Choose one of the following methods to install the MidiController spoon:
 
@@ -22,14 +22,22 @@ Choose one of the following methods to install the MidiController spoon:
 
 Download the [zip file](https://docs.github.com/en/repositories/working-with-files/using-files/downloading-source-code-archives) from this repo and extract it into your Spoons folder at `~/.hammerspoon/Spoons`
 
-### 2. Local Installation
+### 2. Git checkout with local copy
 
-Copy the `MidiController.spoon` directory to your Hammerspoon Spoons directory at `~/.hammerspoon/Spoons/`
+Clone the repo to your machine
+```sh
+git clone git@github.com:shwanton/MidiController.spoon.git
+```
 
-### 3. Git Submodule
+Copy the cloned repo your Hammerspoon Spoons directory 
+```sh
+cp MidController.spoon ~/.hammerspoon/Spoons/
+```
+
+### 3. Git Submodule in Hammerspoon folder
 
 Clone this repository to your `~/.hammerspoon` folder as a git submodule:
-```bash
+```sh
 cd ~/.hammerspoon
 
 git submodule add git@github.com:shwanton/MidiController.spoon.git ./Spoons/MidiController.spoon
@@ -65,7 +73,7 @@ MidiController:addControllerConfig(rotocontrolConfig)
 MidiController:start()
 ```
 
-### Example `init.lua`
+## Example `init.lua`
 
 ```lua
 local function reloadConfig(files)
@@ -93,7 +101,7 @@ MidiController:addControllerConfig(rotocontrolConfig)
 MidiController:start()
 ```
 
-### Debugging
+## Debugging
 
 Enable debug logging with:
 ```lua
