@@ -1,6 +1,6 @@
--- Config for Roto-Control MIDI controller
+-- Config for Melbourne Instruments Roto-Control MIDI controller
 
-local rekordbox = require("configs.rekordbox")
+local rekordbox = require("apps.rekordbox")
 
 local obj = {}
 

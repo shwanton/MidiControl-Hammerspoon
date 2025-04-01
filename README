@@ -62,15 +62,26 @@ brew install --cask hammerspoon
 
 ## Usage
 
+### Roto-Control
+
 Before you can use the Roto-Control configuration, you need to set up a default mapping of buttons and knobs. This can be done in the Roto-Control software.
 
 To use the Roto-Control configuration, you need to add it to your `init.lua` file. Here's an example of how to do this:
 
 ```lua
 local MidiController = hs.loadSpoon("MidiController")
-local rotocontrolConfig = require("configs.rotocontrol"):createConfig()
+local rotocontrolConfig = require("controllers.rotocontrol"):createConfig()
+
 MidiController:addControllerConfig(rotocontrolConfig)
 MidiController:start()
 ```
 
-In this example, `configs.rotocontrol` is the path to the Roto-Control configuration file. You should replace this with the actual path to your Roto-Control configuration file.
+### Faderfox
+
+```lua
+local MidiController = hs.loadSpoon("MidiController")
+local faderfoxConfig = require("controllers.faderfox_uc4"):createConfig()
+
+MidiController:addControllerConfig(faderfoxConfig)
+MidiController:start()
+```
