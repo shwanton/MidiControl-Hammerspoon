@@ -1,7 +1,5 @@
 # MIDI Controller Configuration for Hammerspoon
 
-This project is a Hammerspoon configuration for MIDI controllers
-
 ## Supported Controllers
 
 - **Melbourne Instruments Roto-Control**
@@ -9,40 +7,19 @@ This project is a Hammerspoon configuration for MIDI controllers
 
 ## Supported Applications
 
-### Rekordbox
+### System
 
-The following actions are supported in Rekordbox:
+- System Volume: Control system audio volume
+- System Mute: Toggle system audio mute
+
+### Rekordbox
 
 - Play/Pause: Toggle playback of current track
 - Previous Track: Jump to previous track or restart current track
 - Next Track: Jump to next track
 - Jump Forward: Quick seek forward in current track
 - Jump Backward: Quick seek backward in current track
-- Volume Control: Adjust master volume
 - Launch/Hide: Show or hide the application
-
-## Controller Commands
-
-### Roto-Control
-
-The Roto-Control MIDI controller supports the following commands:
-
-- System Mute: Toggle system audio mute
-- Rekordbox Play/Pause: Toggle track playback
-- Rekordbox Previous Track: Jump to previous track
-- Rekordbox Next Track: Jump to next track
-- Rekordbox Launch/Hide: Show/hide Rekordbox
-- System Volume: Control system audio volume
-- Rekordbox Volume: Control Rekordbox master volume
-- Rekordbox Jump Back: Seek backward in track
-- Rekordbox Jump Forward: Seek forward in track
-
-### Faderfox UC4
-
-The Faderfox UC4 MIDI controller supports the following commands:
-
-- System Mute: Toggle system audio mute
-- System Volume: Control system audio volume
 
 ## Installation
 
@@ -57,17 +34,16 @@ brew install --cask hammerspoon
 ### Project Setup
 
 1. Clone this repository to your local machine.
-2. Copy the `init.lua` file from the `configs` directory to your Hammerspoon configuration directory. This is typically `~/.hammerspoon/`.
-3. Copy the `MidiController.spoon` directory to your Hammerspoon spoons directory. This is typically `~/.hammerspoon/Spoons/`.
+2. Copy the `MidiController.spoon` directory to your Hammerspoon spoons directory. This is typically `~/.hammerspoon/Spoons/`.
 
 ## Usage
 
 ### Roto-Control
 
 Before you can use the Roto-Control configuration, you need to set up a default mapping of buttons and knobs. This can be done in the Roto-Control software.
+Example configuration in `rotocontrol` folder
 
-To use the Roto-Control configuration, you need to add it to your `init.lua` file. Here's an example of how to do this:
-
+To use the Roto-Control configuration, you need to add it to your `init.lua` file.
 ```lua
 local MidiController = hs.loadSpoon("MidiController")
 local rotocontrolConfig = require("controllers.rotocontrol"):createConfig()
