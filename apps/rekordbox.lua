@@ -11,7 +11,7 @@ local REKORDBOX_APP_RUNNING_NAME = "rekordbox"
 
 -- Logger setup
 obj.logger = hs.logger.new('rekordbox')
-obj.logger.setLogLevel('debug')
+obj.logger.setLogLevel('error')
 
 -- Debug alert function
 local function debugAlert(message)

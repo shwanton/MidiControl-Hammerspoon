@@ -1,6 +1,6 @@
 -- Config for Melbourne Instruments Roto-Control MIDI controller
 
-local rekordbox = require("apps.rekordbox")
+local rekordbox = require("rekordbox")
 
 local obj = {}
 
@@ -20,7 +20,7 @@ obj.ccMap = {
 }
 
 obj.logger = hs.logger.new('rotocontrol')
-obj.logger.setLogLevel('debug')
+obj.logger.setLogLevel('error')
 
 obj.savedVolume = 20
 

@@ -6,6 +6,10 @@
 --- Supports configurable MIDI channels, control change handlers, and utility functions
 --- for MIDI value conversion and debouncing.
 
+-- Add the apps and controllers to the package path so they can be required by name
+package.path = package.path .. ";" .. hs.spoons.resourcePath('apps') .. "/?.lua"
+package.path = package.path .. ";" .. hs.spoons.resourcePath('controllers') .. "/?.lua"
+
 local obj = {}
 obj.__index = obj
 
@@ -18,7 +22,7 @@ obj.license = "MIT - https://opensource.org/licenses/MIT"
 
 --- Midi.logger
 obj.logger = hs.logger.new('Midi Controller')
-obj.logger.setLogLevel('debug')
+obj.logger.setLogLevel('error')
 
 -- Internal state
 obj._device = nil
